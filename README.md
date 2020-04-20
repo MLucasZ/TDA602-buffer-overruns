@@ -10,11 +10,12 @@ In order to gain root access to this machine, we are going to use the `addhostal
 - find a way to exploit it, in our case we'll use Python which allow us to have our root shell more easily, since it's a high level language, we can focus on the content of our malicious code instead of how to generate it
 
 
-Firstly let's have a brief explanation of how the stack works in this type of program. In order to maintain consistency during program execution, Linux OS 
-```
-       0x00000000
+Firstly let's have a brief explanation of how the stack works in this type of program. In order to maintain consistency during program execution, Linux OS stores in memory everything that is necessary for the program to works, that means it can push data in a stack, but also store address that point to other location memory (for example when a function call is performed). The schema below tries to summarize memory layout:
 
-        4 bytes
+```
+       0x11111111
+
+   4 bytes (32bits OS)
 < --------------------->
 
 
@@ -35,10 +36,11 @@ Firstly let's have a brief explanation of how the stack works in this type of pr
 |                      |
  ----------------------
 
-       0xffffffff
-
+       0x00000000
 
 ```
+
+Our goal is then 
 
 ```python
 # run a shell on local machine
@@ -65,6 +67,7 @@ print nops+shellcode,nop*2,nop_adress
 ```
 
 ![How to use GDB to craft our exploit](/assets/lab2/gdb-demo.png)
+![Steps of our buffer overflow](/assets/lab2/buffer-overflow.png)
 
 
 ```
