@@ -134,7 +134,6 @@ print nops+shellcode,nop*2,nop_adress
 ```
 
  ----------------------
-<<<<<<< HEAD
 |   RETURN ADDRESS      | <------- now redirects approximately to the end of the stack (in the NOP slide inserted inside the buffer)
  ----------------------
 |    BASE POINTER      | <------- not important in our case, but it is now overwritten with NOPs
