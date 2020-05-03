@@ -1,0 +1,1 @@
+If you have md compatible text editor you can read locally on your machine using README.md file, you can also read it directly on our Github repository [https://github.com/antoinepryy/TDA602-buffer-overruns/blob/master/README.md]

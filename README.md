@@ -80,7 +80,7 @@ To better understand what will happen next, let us have a brief explanation of h
 |                      |
 |                      |
 |                      |
-|       STACK          |
+|       BUFFER         |
 |    (256 bytes)       |
 |                      |
 |                      |
