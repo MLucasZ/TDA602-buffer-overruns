@@ -161,6 +161,12 @@ nop_adress = '\x10\xf9\xff\xbf'
 print nops+shellcode,nop*2,nop_adress
 ```
 
+The goal of this code is to be fully run by the processor and so executed, the most important parts are the followings:
+- "\x31\xc0", sets real user id from effective user id. In another way it means that after the execution, you will be fully authenticated as root user, not only during the program execution (using the SUID bit on the program rights)
+- "\x89\xc3", which copies the value to ebx.
+- "\xb0\x47" ,sets real group id from effective user id.
+
+
 Let's run the program in GDB and see what happens:
 ![Steps of our buffer overflow](/assets/lab2/buffer-overflow.png)
 We succeeded in putting our malicious code in memory and successfully overwritten the return address so that the program will point to the NOP slope.
