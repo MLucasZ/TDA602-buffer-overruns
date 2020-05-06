@@ -108,7 +108,8 @@ To create our malicious input in an efficient way, we used GDB to see if everyth
 - `(gdb) x/100x $sp` displays 100 current words in our memory where the stack pointer is located. This allows us to analyse the current stack state once our buffer is written with our three arguments.
 
 On the figure below you can see these different steps executed as an example, and also the result in memory:
-![How to use GDB to craft our exploit](/assets/lab2/gdb-demo.png)
+
+![How to use GDB to craft our exploit](assets/lab2/gdb-demo.png)
 
 We now have to create an input that fulfills these requirements:
 - size of 264 bytes, to fill perfectly into the current stack size (256B), plus the base pointer (32bits, so 4B) and the return address (4B for the same reason).
@@ -162,17 +163,28 @@ print nops+shellcode,nop*2,nop_adress
 ```
 
 The most important parts of the shellcode are the following:
-- "\x31\xc0", sets real user id from effective user id. In other words, it means that after the execution, you will be permanantly logged as root user (because your real user id becomes root) and not only during the program execution (using the SUID bit on the program rights).
-- "\x89\xc3", which copies the value to ebx.
-- "\xb0\x47" ,sets real group id from effective user id. It also sets our real group id as root to get fully access to all the privileges of the root user (like files writable only by root group for exemple).
+- "\x31\xc0", sets real user id from effective user id. In other words, it means that after the execution, you will be permanently logged as root user (because your real user id becomes root) and not only during the program execution (using the SUID bit on the program rights). An example of C code doing this manipulation would be the code above:
+
+```c
+
+setuid(geteuid()); //takes current effective user ID (root because SUID bit is active) and update our real user ID with this value
+
+```
+Links of setuid and geteuid functions [here](http://man7.org/linux/man-pages/man2/setuid.2.html) and [here](http://manpagesfr.free.fr/man/man2/getuid.2.html)
+
+- "\xb0\x47", sets real group id from effective user id. It also sets our real group id as root to get fully access to all the privileges of the root user (like files writable only by root group for example). The C functions are quite similar than the previous ones. 
+- "\x89\xc3", which copies the value to ebx, which is a well-known CPU register. In this shellcode, the value that is stored is a pointer to `/bin/sh`, that thus will be executed as root because we own its user ID
 
 
 Let's run the program in GDB and see what happens:
-![Steps of our buffer overflow](/assets/lab2/buffer-overflow.png)
+
+![Steps of our buffer overflow](assets/lab2/buffer-overflow.png)
+
 We succeeded in putting our malicious code in memory and successfully overwritten the return address so that the program will point to the NOP slope.
 
 Now we just have to run it, and we have a root shell !
-![Gaining root shell using our exploit](/assets/lab2/root-shell.png)
+
+![Gaining root shell using our exploit](assets/lab2/root-shell.png)
 
 
 ### Part 2 : Create a Backdoor
