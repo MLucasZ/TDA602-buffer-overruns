@@ -163,17 +163,17 @@ print nops+shellcode,nop*2,nop_adress
 ```
 
 The most important parts of the shellcode are the following:
-- "\x31\xc0", sets real user id from effective user id. In other words, it means that after the execution, you will be permanently logged as root user (because your real user id becomes root) and not only during the program execution (using the SUID bit on the program rights). An example of C code doing this manipulation would be the code above:
+- "\x31\xc0", sets real user id from effective user id. In other words, it means that after the execution, you will be permanently logged as root user (because your real user id becomes root) and not only during the program execution (using the SUID bit on the program rights). An example of C code doing this manipulation would be the code below:
 
 ```c
 
-setuid(geteuid()); //takes current effective user ID (root because SUID bit is active) and update our real user ID with this value
+setuid(geteuid()); //takes current effective user ID (root because SUID bit is active) and updates our real user ID with this value
 
 ```
-Links of setuid and geteuid functions [here](http://man7.org/linux/man-pages/man2/setuid.2.html) and [here](http://manpagesfr.free.fr/man/man2/getuid.2.html)
+Links to setuid and geteuid functions man pages [here](http://man7.org/linux/man-pages/man2/setuid.2.html) and [here](http://manpagesfr.free.fr/man/man2/getuid.2.html)
 
-- "\xb0\x47", sets real group id from effective user id. It also sets our real group id as root to get fully access to all the privileges of the root user (like files writable only by root group for example). The C functions are quite similar than the previous ones. 
-- "\x89\xc3", which copies the value to ebx, which is a well-known CPU register. In this shellcode, the value that is stored is a pointer to `/bin/sh`, that thus will be executed as root because we own its user ID
+- "\xb0\x47", sets real group id from effective user id. It also sets our real group id as root to get fully access to all the privileges of the root user (like files writable only by root group for example). The C functions are quite similar to the previously seen ones (setuid and geteuid). 
+- "\x89\xc3", which copies the value to ebx, a well-known CPU register. In this shellcode, the value that is stored is a pointer to `/bin/sh` which will be executed as root because we own its user ID.
 
 
 Let's run the program in GDB and see what happens:
